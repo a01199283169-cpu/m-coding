@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip3 list:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)",
+      "Bash(./venv/bin/pip install:*)",
+      "Bash(sudo apt install:*)",
+      "Bash(echo:*)",
+      "Bash(apt-cache show:*)",
+      "Bash(sudo apt update:*)",
+      "Bash(dpkg:*)",
+      "Bash(pkill:*)",
+      "Bash(pgrep:*)"
+    ]
+  }
+}
