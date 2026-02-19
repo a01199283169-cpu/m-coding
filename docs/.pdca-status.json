@@ -1,0 +1,197 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-02-19T06:19:24.113Z",
+  "activeFeatures": [
+    "휴가등록앱",
+    "meeting_analyzer",
+    "m-coding"
+  ],
+  "primaryFeature": "휴가등록앱",
+  "features": {
+    "휴가등록앱": {
+      "phase": "do",
+      "startedAt": "2026-02-12T10:30:00.000Z",
+      "planDocument": "docs/01-plan/features/휴가등록앱.plan.md",
+      "designDocument": "docs/02-design/features/휴가등록앱.design.md",
+      "doGuide": "docs/do-guide-휴가등록앱.md",
+      "status": "active",
+      "lastUpdated": "2026-02-12T11:05:00.000Z"
+    },
+    "meeting_analyzer": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-19T04:05:05.405Z",
+        "lastUpdated": "2026-02-19T05:37:23.789Z"
+      },
+      "lastFile": "/home/snowwon5/m-coding/meeting_analyzer/server.py"
+    },
+    "m-coding": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-02-19T05:57:50.186Z",
+        "lastUpdated": "2026-02-19T06:19:24.113Z"
+      },
+      "lastFile": "/home/snowwon5/m-coding/icon_creator.py"
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-02-12T10:26:25.236Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-02-19T06:19:24.113Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-02-19T04:05:05.405Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:22:19.534Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:22:34.088Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:22:48.330Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:23:00.944Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:23:07.042Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:23:13.097Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:23:28.961Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T04:23:41.333Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:14:25.433Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:14:32.727Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:31:41.563Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:37:09.579Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:37:23.789Z",
+      "feature": "meeting_analyzer",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:57:50.186Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:09.742Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:24.986Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:37.269Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:43.628Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:51.413Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T05:58:57.975Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T06:18:02.300Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-02-19T06:19:24.113Z",
+      "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    }
+  ]
+}

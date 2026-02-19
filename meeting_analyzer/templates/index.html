@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>입주자대표회의 회의록 분석기</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* 헤더 */
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 700;
+      color: #2E75B6;
+    }
+    .header p {
+      margin-top: 6px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    /* 카드 */
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* 경로 안내 박스 */
+    .guide-box {
+      background: #fffbe6;
+      border: 1.5px solid #ffe082;
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+    }
+    .guide-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7a5a00;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .guide-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .guide-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .step-num {
+      min-width: 24px;
+      height: 24px;
+      background: #f9a825;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .guide-step kbd {
+      display: inline-block;
+      padding: 1px 7px;
+      background: #fff;
+      border: 1px solid #bbb;
+      border-bottom: 3px solid #999;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #333;
+    }
+    .guide-step strong { color: #333; }
+
+    /* 폴더 경로 입력 */
+    .folder-input-wrap {
+      display: flex;
+      gap: 0;
+      border: 2px solid #b0c8e8;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f7faff;
+      transition: border-color 0.2s;
+    }
+    .folder-input-wrap:focus-within {
+      border-color: #2E75B6;
+    }
+    .folder-icon-label {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 22px;
+      background: #eaf2fb;
+      border-right: 2px solid #b0c8e8;
+    }
+    .folder-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      padding: 16px 18px;
+      font-size: 15px;
+      font-family: 'Malgun Gothic', 'Consolas', monospace;
+      color: #222;
+    }
+    .folder-input::placeholder { color: #bbb; }
+
+    /* 검증 상태 */
+    .validate-status {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      min-height: 22px;
+      transition: color 0.2s;
+    }
+    .validate-status.ok    { color: #107C41; }
+    .validate-status.error { color: #c0392b; }
+    .validate-status.checking { color: #888; }
+
+    /* 버튼 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #107C41;
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+      font-size: 16px;
+      padding: 12px;
+      margin-top: 16px;
+    }
+    .btn-primary:hover:not(:disabled) { background: #0b5e31; }
+    .btn-primary:disabled { background: #a0a0a0; cursor: not-allowed; }
+
+    .btn-excel {
+      background: #107C41;
+      color: #fff;
+    }
+    .btn-excel:hover { background: #0b5e31; }
+
+    .btn-word {
+      background: #2E75B6;
+      color: #fff;
+    }
+    .btn-word:hover { background: #1F5C94; }
+
+    /* 진행 바 */
+    .progress-wrap {
+      background: #e0e0e0;
+      border-radius: 99px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #2E75B6;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* 로그 영역 */
+    .log-area {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Consolas', 'D2Coding', monospace;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 14px 16px;
+      min-height: 180px;
+      max-height: 280px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .log-area .log-done  { color: #4ec9b0; }
+    .log-area .log-error { color: #f44747; }
+
+    /* 결과 영역 */
+    #resultsSection { display: none; }
+
+    .download-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    /* 테이블 */
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    thead th {
+      background: #2E75B6;
+      color: #fff;
+      padding: 10px 12px;
+      text-align: center;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) { background: #ebf3fb; }
+    tbody tr:hover { background: #dde9f5; }
+    tbody td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      vertical-align: middle;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .badge-pass { background: #e2efda; color: #196b24; }
+    .badge-fail { background: #ffc7ce; color: #9c0006; }
+    .badge-neutral { background: #ededf0; color: #444; }
+
+    /* 반응형 */
+    @media (max-width: 600px) {
+      .header h1 { font-size: 20px; }
+      .download-row { flex-direction: column; }
+      .btn-excel, .btn-word { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <h1>입주자대표회의 회의록 분석기</h1>
+    <p>PDF 파일을 업로드하면 안건 및 의결결과를 자동으로 추출합니다</p>
+  </div>
+
+  <!-- 폴더 경로 카드 -->
+  <div class="card">
+    <div class="card-title">📁 회의자료 폴더 경로 입력</div>
+
+    <!-- 경로 복사 안내 -->
+    <div class="guide-box">
+      <div class="guide-title">💡 탐색기에서 폴더 경로 복사하는 방법</div>
+      <div class="guide-steps">
+        <div class="guide-step">
+          <span class="step-num">1</span>
+          <span>회의록 PDF 파일이 담긴 <strong>폴더를 윈도우 탐색기로 엽니다</strong></span>
+        </div>
+        <div class="guide-step">
+          <span class="step-num">2</span>
+          <span>상단 <strong>주소창</strong>을 클릭하거나 <kbd>Ctrl</kbd>+<kbd>L</kbd> 을 누릅니다 → 경로가 파란색으로 선택됩니다</span>
+        </div>
+        <div class="guide-step">
+          <span class="step-num">3</span>
+          <span><kbd>Ctrl</kbd>+<kbd>C</kbd> 로 <strong>복사</strong>한 뒤, 아래 입력창에 <kbd>Ctrl</kbd>+<kbd>V</kbd> 로 <strong>붙여넣기</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 경로 입력창 -->
+    <div class="folder-input-wrap">
+      <span class="folder-icon-label">📂</span>
+      <input
+        type="text"
+        id="folderInput"
+        class="folder-input"
+        placeholder="예)  C:\Users\홍길동\회의록\2024년  ←  탐색기 주소창에서 Ctrl+C 후 여기에 Ctrl+V"
+        spellcheck="false"
+        autocomplete="off"
+      >
+    </div>
+    <div class="validate-status" id="validateStatus"></div>
+
+    <button class="btn btn-primary" id="analyzeBtn" disabled>
+      🔍 분석 시작
+    </button>
+  </div>
+
+  <!-- 진행 카드 (분석 중에만 표시) -->
+  <div class="card" id="progressSection" style="display:none">
+    <div class="card-title">⚙️ 분석 진행</div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <div class="log-area" id="logArea"></div>
+  </div>
+
+  <!-- 결과 카드 -->
+  <div class="card" id="resultsSection">
+    <div class="card-title">✅ 분석 결과</div>
+
+    <div class="download-row">
+      <button class="btn btn-excel" id="excelBtn">⬇️ Excel 다운로드</button>
+      <button class="btn btn-word"  id="wordBtn">⬇️ Word 다운로드</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="resultTable">
+        <thead>
+          <tr>
+            <th>파일명</th>
+            <th>회의명</th>
+            <th>회의일</th>
+            <th>안건명</th>
+            <th>안건 주요사항</th>
+            <th>의결결과</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const folderInput     = document.getElementById('folderInput');
+  const validateStatus  = document.getElementById('validateStatus');
+  const analyzeBtn      = document.getElementById('analyzeBtn');
+  const progressSection = document.getElementById('progressSection');
+  const progressBar     = document.getElementById('progressBar');
+  const logArea         = document.getElementById('logArea');
+  const resultsSection  = document.getElementById('resultsSection');
+  const resultBody      = document.getElementById('resultBody');
+  const excelBtn        = document.getElementById('excelBtn');
+  const wordBtn         = document.getElementById('wordBtn');
+
+  // ── 실시간 경로 검증 (입력 후 400ms 디바운스) ──────────────
+
+  let validateTimer = null;
+
+  folderInput.addEventListener('input', () => {
+    clearTimeout(validateTimer);
+    analyzeBtn.disabled = true;
+    const val = folderInput.value.trim();
+    if (!val) {
+      setStatus('', '');
+      return;
+    }
+    setStatus('checking', '⏳ 경로 확인 중...');
+    validateTimer = setTimeout(() => doValidate(val), 400);
+  });
+
+  folderInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !analyzeBtn.disabled) startAnalysis();
+  });
+
+  async function doValidate(path) {
+    try {
+      const res  = await fetch('/validate', {
+        method:  'POST',
+        headers: {'Content-Type': 'application/json'},
+        body:    JSON.stringify({folder: path}),
+      });
+      const json = await res.json();
+      if (json.valid) {
+        setStatus('ok', `✅ PDF ${json.pdf_count}개 발견 — 분석 시작 버튼을 누르세요`);
+        analyzeBtn.disabled = false;
+      } else {
+        setStatus('error', `❌ ${json.error}`);
+        analyzeBtn.disabled = true;
+      }
+    } catch (e) {
+      setStatus('error', '❌ 서버 연결 실패');
+      analyzeBtn.disabled = true;
+    }
+  }
+
+  function setStatus(type, msg) {
+    validateStatus.className = 'validate-status' + (type ? ' ' + type : '');
+    validateStatus.textContent = msg;
+  }
+
+  // ── 분석 시작 ──────────────────────────────────────────────
+
+  analyzeBtn.addEventListener('click', startAnalysis);
+
+  async function startAnalysis() {
+    const folder = folderInput.value.trim();
+    if (!folder) return;
+
+    // UI 초기화
+    analyzeBtn.disabled = true;
+    progressSection.style.display = 'block';
+    resultsSection.style.display  = 'none';
+    logArea.innerHTML = '';
+    progressBar.style.width = '0%';
+    resultBody.innerHTML = '';
+
+    // 서버 요청 (JSON)
+    let jobId;
+    try {
+      const res  = await fetch('/analyze', {
+        method:  'POST',
+        headers: {'Content-Type': 'application/json'},
+        body:    JSON.stringify({folder}),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        appendLog('[오류] ' + (json.error || '알 수 없는 오류'), 'error');
+        analyzeBtn.disabled = false;
+        return;
+      }
+      jobId = json.job_id;
+      appendLog(`PDF ${json.pdf_count}개 발견. 분석을 시작합니다...\n`);
+    } catch (e) {
+      appendLog('[오류] 서버 연결 실패: ' + e.message, 'error');
+      analyzeBtn.disabled = false;
+      return;
+    }
+
+    // SSE 수신
+    const es = new EventSource('/stream/' + jobId);
+    es.onmessage = e => {
+      const data = JSON.parse(e.data);
+
+      if (data.type === 'log') {
+        const cls = data.msg.includes('완료') ? 'log-done'
+                  : data.msg.includes('오류') ? 'log-error' : '';
+        appendLog(data.msg, cls);
+      }
+
+      if (data.type === 'progress') {
+        progressBar.style.width = data.value + '%';
+      }
+
+      if (data.type === 'done') {
+        es.close();
+        renderResults(data.data, jobId);
+        analyzeBtn.disabled = false;
+      }
+
+      if (data.type === 'error') {
+        es.close();
+        appendLog('[오류] ' + data.msg, 'error');
+        analyzeBtn.disabled = false;
+      }
+    };
+
+    es.onerror = () => {
+      es.close();
+      analyzeBtn.disabled = false;
+    };
+  }
+
+  function appendLog(msg, cls = '') {
+    const span = document.createElement('span');
+    if (cls) span.className = cls;
+    span.textContent = msg + '\n';
+    logArea.appendChild(span);
+    logArea.scrollTop = logArea.scrollHeight;
+  }
+
+  // ── 결과 렌더링 ────────────────────────────────────────────
+
+  function renderResults(data, jobId) {
+    resultsSection.style.display = 'block';
+
+    resultBody.innerHTML = data.map(row => {
+      const res = row['의결결과'] || '';
+      let badge = '';
+      if (res.includes('가결') || res.includes('승인')) {
+        badge = `<span class="badge badge-pass">${res}</span>`;
+      } else if (res.includes('부결') || res.includes('보류')) {
+        badge = `<span class="badge badge-fail">${res}</span>`;
+      } else if (res) {
+        badge = `<span class="badge badge-neutral">${res}</span>`;
+      }
+
+      return `<tr>
+        <td>${row['파일명'] || ''}</td>
+        <td>${row['회의명'] || ''}</td>
+        <td style="text-align:center">${row['회의일'] || ''}</td>
+        <td>${row['안건명'] || ''}</td>
+        <td style="font-size:12px">${row['안건 주요사항'] || ''}</td>
+        <td style="text-align:center">${badge || '-'}</td>
+        <td style="font-size:12px">${row['비고'] || ''}</td>
+      </tr>`;
+    }).join('');
+
+    // 다운로드 버튼 (원본 폴더에 저장된 파일)
+    excelBtn.onclick = () => location.href = `/download/${jobId}/excel`;
+    wordBtn.onclick  = () => location.href = `/download/${jobId}/word`;
+
+    resultsSection.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

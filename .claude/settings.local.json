@@ -11,7 +11,15 @@
       "Bash(sudo apt update:*)",
       "Bash(dpkg:*)",
       "Bash(pkill:*)",
-      "Bash(pgrep:*)"
+      "Bash(pgrep:*)",
+      "Bash(git config:*)",
+      "Bash(git pull:*)",
+      "Bash(ls:*)",
+      "Bash(source:*)",
+      "Bash(pip show:*)",
+      "Bash(pip install:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)"
     ]
   }
 }

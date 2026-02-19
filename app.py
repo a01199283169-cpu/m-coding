@@ -74,7 +74,7 @@ class PDFAnalysisWorker(QThread):
                 if tables:
                     all_tables.extend(tables)
 
-        session  = self._session_number(full_text)
+        mtg_name = self._meeting_name(full_text)
         date_str = self._meeting_date(full_text)
 
         # 테이블 우선 파싱
@@ -86,39 +86,42 @@ class PDFAnalysisWorker(QThread):
         if agendas:
             for ag in agendas:
                 results.append({
-                    "파일명":   pdf_path.name,
-                    "차수":     session,
-                    "회의일시": date_str,
-                    "안건번호": ag.get("number", ""),
-                    "안건명":   ag.get("name", ""),
-                    "의결결과": ag.get("result", ""),
+                    "파일명":        pdf_path.name,
+                    "회의명":        mtg_name,
+                    "회의일":        date_str,
+                    "안건명":        ag.get("name", ""),
+                    "안건 주요사항": ag.get("content", ""),
+                    "의결결과":      ag.get("result", ""),
+                    "비고":          ag.get("remark", ""),
                 })
         else:
             results.append({
-                "파일명":   pdf_path.name,
-                "차수":     session,
-                "회의일시": date_str,
-                "안건번호": "",
-                "안건명":   "(안건 추출 불가)",
-                "의결결과": "",
+                "파일명":        pdf_path.name,
+                "회의명":        mtg_name,
+                "회의일":        date_str,
+                "안건명":        "(안건 추출 불가)",
+                "안건 주요사항": "",
+                "의결결과":      "",
+                "비고":          "",
             })
         return results
 
-    # ── 차수 추출 ──────────────────────────────────────────
-    def _session_number(self, text: str) -> str:
+    # ── 회의명 추출 ────────────────────────────────────────
+    def _meeting_name(self, text: str) -> str:
         patterns = [
-            r'제\s*(\d+)\s*차',
-            r'(\d+)\s*차\s*(?:정기|임시|회의)',
-            r'제\s*(\d+)\s*회',
-            r'차\s*수\s*[:\s]*(\d+)',
+            r'제\s*\d+\s*차\s*(?:정기|임시)?\s*입주자대표\s*회의',
+            r'(?:정기|임시)\s*입주자대표\s*회의',
+            r'제\s*\d+\s*차\s*(?:정기|임시)?\s*이사회',
+            r'입주자대표\s*회의',
+            r'이사회',
         ]
         for p in patterns:
             m = re.search(p, text)
             if m:
-                return f"제{m.group(1)}차"
+                return re.sub(r'\s+', ' ', m.group(0)).strip()
         return ""
 
-    # ── 회의일시 추출 ──────────────────────────────────────
+    # ── 회의일 추출 ────────────────────────────────────────
     def _meeting_date(self, text: str) -> str:
         # 키워드 주변 날짜 우선
         ctx = re.search(
@@ -137,8 +140,10 @@ class PDFAnalysisWorker(QThread):
         return ""
 
     # ── 테이블 파싱 ────────────────────────────────────────
-    AGENDA_KW  = {"안건", "안건명", "심의안건", "의결안건", "제목", "내용"}
+    AGENDA_KW  = {"안건", "안건명", "심의안건", "의결안건", "제목"}
     RESULT_KW  = {"의결결과", "결과", "처리결과", "의결사항", "처리사항"}
+    CONTENT_KW = {"주요내용", "내용", "주요사항", "심의내용", "검토내용", "처리내용"}
+    REMARK_KW  = {"비고", "특이사항", "기타사항"}
     RESOLVE_KW = ["원안가결", "수정가결", "부결", "보류", "가결", "승인", "의결"]
 
     def _parse_tables(self, tables: list) -> list:
@@ -146,7 +151,7 @@ class PDFAnalysisWorker(QThread):
         for table in tables:
             if not table:
                 continue
-            col_ag, col_rs, col_no = -1, -1, -1
+            col_ag, col_rs, col_ct, col_rk = -1, -1, -1, -1
             hdr_idx = -1
 
             # 헤더 행 탐색 (처음 5행)
@@ -162,8 +167,10 @@ class PDFAnalysisWorker(QThread):
                             col_ag = ci
                         if any(k in s for k in self.RESULT_KW):
                             col_rs = ci
-                        if re.search(r'번호|호수', s):
-                            col_no = ci
+                        if any(k in s for k in self.CONTENT_KW):
+                            col_ct = ci
+                        if any(k in s for k in self.REMARK_KW):
+                            col_rk = ci
                     break
 
             if hdr_idx < 0 or col_ag < 0:
@@ -175,16 +182,18 @@ class PDFAnalysisWorker(QThread):
                 def _get(ci):
                     return str(row[ci]).strip() if 0 <= ci < len(row) and row[ci] else ""
 
-                name   = _get(col_ag)
-                result = _get(col_rs)
-                number = _get(col_no)
+                name    = _get(col_ag)
+                result  = _get(col_rs)
+                content = _get(col_ct)
+                remark  = _get(col_rk)
 
                 if not name or name in {"None", "-"}:
                     continue
                 if not result:
                     result = self._resolve_in_row(row)
 
-                agendas.append({"number": number, "name": name, "result": result})
+                agendas.append({"name": name, "content": content,
+                                "result": result, "remark": remark})
 
         return agendas
 
@@ -212,19 +221,32 @@ class PDFAnalysisWorker(QThread):
             for pat in agenda_re:
                 m = pat.match(line)
                 if m:
-                    num  = m.group(1)
-                    name = m.group(2).strip()
-                    # 뒤 5줄에서 의결결과 탐색
+                    name   = m.group(2).strip()
                     result = ""
-                    for j in range(i + 1, min(i + 6, len(lines))):
+                    content_lines = []
+
+                    for j in range(i + 1, min(i + 12, len(lines))):
+                        sl = lines[j].strip()
+                        if not sl:
+                            continue
+                        # 의결결과 키워드 발견 시 캡처 후 중단
+                        hit = False
                         for kw in self.RESOLVE_KW:
-                            if kw in lines[j]:
-                                rm = re.search(kw + r'[^\n]*', lines[j])
+                            if kw in sl:
+                                rm = re.search(kw + r'[^\n]*', sl)
                                 result = rm.group(0).strip() if rm else kw
+                                hit = True
                                 break
-                        if result:
+                        if hit:
                             break
-                    agendas.append({"number": num, "name": name, "result": result})
+                        # 다음 안건 시작 시 중단
+                        if any(p.match(sl) for p in agenda_re):
+                            break
+                        content_lines.append(sl)
+
+                    content = ' '.join(content_lines[:3])  # 최대 3줄
+                    agendas.append({"name": name, "content": content,
+                                    "result": result, "remark": ""})
                     break
 
         return agendas
@@ -257,8 +279,8 @@ class SaveWorker(QThread):
         df = pd.DataFrame(self.data)
         path = str(Path(self.save_folder) / "회의록_분석결과.xlsx")
 
-        COLS = ["파일명", "차수", "회의일시", "안건번호", "안건명", "의결결과"]
-        WIDTHS = [32, 10, 20, 10, 48, 16]
+        COLS   = ["파일명", "회의명", "회의일", "안건명", "안건 주요사항", "의결결과", "비고"]
+        WIDTHS = [26, 22, 14, 32, 42, 14, 12]
 
         with pd.ExcelWriter(path, engine="xlsxwriter") as writer:
             df.to_excel(writer, sheet_name="회의록", index=False)
@@ -300,7 +322,7 @@ class SaveWorker(QThread):
             for ri in range(len(df)):
                 base = row_even if ri % 2 == 0 else row_odd
                 for ci, col in enumerate(COLS):
-                    val = df.iloc[ri, ci] if ci < len(df.columns) else ""
+                    val = df.iloc[ri][col] if col in df.columns else ""
                     if ci == res_ci:
                         vs = str(val)
                         if any(k in vs for k in ["가결", "승인"]):
@@ -361,8 +383,8 @@ class SaveWorker(QThread):
         doc.add_paragraph()
 
         # 표
-        HEADERS   = ["파일명", "차수", "회의일시", "안건번호", "안건명", "의결결과"]
-        COL_W_CM  = [4.5, 1.8, 3.5, 1.8, 6.5, 2.5]
+        HEADERS   = ["파일명", "회의명", "회의일", "안건명", "안건 주요사항", "의결결과", "비고"]
+        COL_W_CM  = [3.5, 3.0, 2.8, 3.8, 5.0, 2.4, 1.5]
 
         table = doc.add_table(rows=1, cols=len(HEADERS))
         table.style = "Table Grid"

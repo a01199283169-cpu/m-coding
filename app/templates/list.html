@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}휴가 목록 - 휴가등록앱{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">📋 내 휴가 목록</h2>
+        <a href="/leaves/new" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-medium">
+            + 새 휴가 신청
+        </a>
+    </div>
+
+    <!-- Leaves Table -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+        {% if leaves %}
+        <table class="w-full">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        휴가 종류
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        시작일
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        종료일
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        사유
+                    </th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        작업
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for leave in leaves %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {{ leave.leave_type.value }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ leave.start_date }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ leave.end_date }}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">
+                        {{ leave.reason or "-" }}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                        <a href="/leaves/{{ leave.id }}" class="text-blue-600 hover:text-blue-900">수정</a>
+                        <form method="POST" action="/leaves/{{ leave.id }}/delete" class="inline" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                            <button type="submit" class="text-red-600 hover:text-red-900">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="text-center py-12">
+            <p class="text-gray-500 text-lg mb-4">신청한 휴가가 없습니다.</p>
+            <a href="/leaves/new" class="text-blue-600 hover:text-blue-700 font-medium">
+                첫 휴가를 신청해보세요 →
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
