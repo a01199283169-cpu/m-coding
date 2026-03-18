@@ -1,10 +1,13 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-02-19T06:19:24.113Z",
+  "lastUpdated": "2026-03-11T01:05:41.785Z",
   "activeFeatures": [
     "휴가등록앱",
     "meeting_analyzer",
-    "m-coding"
+    "m-coding",
+    "yooa-practice-list",
+    "scripts",
+    "hwpx-Bogosu"
   ],
   "primaryFeature": "휴가등록앱",
   "features": {
@@ -42,6 +45,45 @@
         "lastUpdated": "2026-02-19T06:19:24.113Z"
       },
       "lastFile": "/home/snowwon5/m-coding/icon_creator.py"
+    },
+    "yooa-practice-list": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-10T03:36:05.483Z",
+        "lastUpdated": "2026-03-10T03:57:30.035Z"
+      },
+      "lastFile": "/home/snowwon5/m-coding/yooa-practice-list/hwpx_generator.py"
+    },
+    "scripts": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-10T03:52:47.277Z",
+        "lastUpdated": "2026-03-10T03:53:13.962Z"
+      },
+      "lastFile": "/home/snowwon5/m-coding/scripts/package_skill.py"
+    },
+    "hwpx-Bogosu": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-11T00:58:57.210Z",
+        "lastUpdated": "2026-03-11T01:05:41.785Z"
+      },
+      "lastFile": "/home/snowwon5/m-coding/hwpx-Bogosu/hwpx_generator.py"
     }
   },
   "pipeline": {
@@ -52,7 +94,7 @@
   "session": {
     "startedAt": "2026-02-12T10:26:25.236Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-02-19T06:19:24.113Z"
+    "lastActivity": "2026-03-11T01:05:41.785Z"
   },
   "history": [
     {
@@ -190,6 +232,66 @@
     {
       "timestamp": "2026-02-19T06:19:24.113Z",
       "feature": "m-coding",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:36:05.483Z",
+      "feature": "yooa-practice-list",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:45:59.613Z",
+      "feature": "yooa-practice-list",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:46:21.580Z",
+      "feature": "yooa-practice-list",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:52:47.277Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:53:13.962Z",
+      "feature": "scripts",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-10T03:57:30.035Z",
+      "feature": "yooa-practice-list",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T00:58:57.210Z",
+      "feature": "hwpx-Bogosu",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T00:59:12.934Z",
+      "feature": "hwpx-Bogosu",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T01:02:41.478Z",
+      "feature": "hwpx-Bogosu",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-11T01:05:41.785Z",
+      "feature": "hwpx-Bogosu",
       "phase": "do",
       "action": "updated"
     }
