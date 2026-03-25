@@ -49,25 +49,33 @@ def parse_excel_file(file_content: bytes) -> tuple:
 
             try:
                 # 엑셀 데이터 읽기 (단과대학 다음에 학과)
-                # 번호(0), 단과대학(1), 학과(2), 자산구분(3), 카테고리(4), 품목코드(5), 품목명(6), 규격(7),
-                # 수량(8), 단가(9), 총액(10), 입고일(11),
-                # 납품업체(12), 보관위치(13), 내용연수(14), 폐기예정일(15),
-                # 입력자(16), 입력일(17), 비고(18)
+                # 번호(0), 단과대학(1), 학과(2), 자산구분(3), 카테고리(4), 품목코드(5), 자산코드(6),
+                # 품목명(7), 규격(8), 수량(9), 단가(10), 총액(11), 입고일(12),
+                # 납품업체(13), 보관위치(14), 예산부서(15), 내용연수(16), 폐기예정일(17),
+                # 입력자(18), 입력일(19), 비고(20)
 
-                item_name = row[6]
+                item_code = row[5]  # 품목코드 (시설팀 부여)
+                asset_code = row[6] if row[6] else None  # 자산코드
+                item_name = row[7]
                 category = row[4] if row[4] else '기타'
-                spec = row[7]
+                spec = row[8]
                 dept_name = row[2]
-                quantity = int(row[8]) if row[8] else 1
-                unit_price = int(row[9]) if row[9] else 0
-                arrival_date = row[11]
-                vendor = row[12]
-                location = row[13]
-                useful_life = int(row[14]) if row[14] else None
-                registrant_name = row[16]
-                note = row[18]
+                asset_type = row[3] if row[3] else '교육용기자재'
+                quantity = int(row[9]) if row[9] else 1
+                unit_price = int(row[10]) if row[10] else 0
+                arrival_date = row[12]
+                vendor = row[13]
+                location = row[14]
+                budget_dept = row[15] if row[15] else None  # 예산부서
+                useful_life = int(row[16]) if row[16] else None
+                registrant_name = row[18]
+                note = row[20]
 
                 # 필수 항목 검증
+                if not item_code:
+                    errors.append(f"행 {row_idx}: 품목코드가 없습니다. (시설팀 부여 코드 필수)")
+                    continue
+
                 if not item_name:
                     errors.append(f"행 {row_idx}: 품목명이 없습니다.")
                     continue
@@ -110,6 +118,8 @@ def parse_excel_file(file_content: bytes) -> tuple:
                     disposal_date_str = disposal_dt.strftime('%Y-%m-%d')
 
                 item_data = {
+                    'item_code': item_code,
+                    'asset_code': asset_code,
                     'item_name': item_name,
                     'category': category,
                     'spec': spec,
@@ -121,8 +131,9 @@ def parse_excel_file(file_content: bytes) -> tuple:
                     'purchase_date': purchase_date_str,
                     'arrival_date': arrival_date_str,
                     'vendor': vendor,
-                    'asset_type': '교육용기자재',
+                    'asset_type': asset_type,
                     'location': location,
+                    'budget_dept': budget_dept,
                     'useful_life': useful_life,
                     'disposal_date': disposal_date_str,
                     'note': note,
@@ -159,20 +170,21 @@ def bulk_insert_equipment(data_list: list, username: str) -> tuple:
 
     for idx, data in enumerate(data_list, start=1):
         try:
-            # 품목코드 자동생성
-            item_code = generate_item_code(data['dept_code'])
+            # 품목코드는 엑셀에서 가져옴 (시설팀 부여 코드)
+            item_code = data['item_code']
 
             # DB 삽입
             cursor.execute("""
                 INSERT INTO equipment (
-                    item_code, item_name, category, spec, dept_code, college_code,
+                    item_code, asset_code, item_name, category, spec, dept_code, college_code,
                     quantity, unit_price, total_price,
                     purchase_date, arrival_date, vendor,
-                    asset_type, location, useful_life, disposal_date,
+                    asset_type, location, budget_dept, useful_life, disposal_date,
                     note, registrant_name, registrant_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 item_code,
+                data.get('asset_code'),
                 data['item_name'],
                 data.get('category'),
                 data.get('spec'),
@@ -186,6 +198,7 @@ def bulk_insert_equipment(data_list: list, username: str) -> tuple:
                 data.get('vendor'),
                 data['asset_type'],
                 data.get('location'),
+                data.get('budget_dept'),
                 data.get('useful_life'),
                 data.get('disposal_date'),
                 data.get('note'),

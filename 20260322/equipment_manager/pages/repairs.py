@@ -148,7 +148,7 @@ def show_repair_list(user: dict):
     st.subheader("📋 수리·점검 이력 목록")
 
     # 필터
-    col1, col2 = st.columns(2)
+    col1, col2, col3 = st.columns([3, 3, 1])
 
     with col1:
         equipment_list = get_equipment_list(user['college_code'], user['role'])
@@ -167,6 +167,17 @@ def show_repair_list(user: dict):
             key="repair_filter_type"
         )
 
+    with col3:
+        st.write("")  # 여백
+        st.write("")  # 여백
+        if st.button("🔍 조회", use_container_width=True, key="repair_list_search"):
+            st.session_state.repair_list_searched = True
+
+    # 검색 버튼을 눌렀을 때만 조회
+    if not st.session_state.get('repair_list_searched', False):
+        st.info("💡 조회 조건을 선택하고 **🔍 조회** 버튼을 눌러주세요.")
+        return
+
     # 조회
     if selected_equipment != "전체":
         equipment_id = equipment_list[equipment_options.index(selected_equipment) - 1]['id']
@@ -179,7 +190,7 @@ def show_repair_list(user: dict):
         repairs = [r for r in repairs if r['repair_type'] == selected_type]
 
     if not repairs:
-        st.info("조회된 이력이 없습니다.")
+        st.warning("조회된 이력이 없습니다. 다른 조건으로 검색하세요.")
         return
 
     # 통계
@@ -265,7 +276,7 @@ def get_depts_by_college(college_name: str) -> list:
     return ['전체'] + [f"{d['dept_code']} - {d['dept_name']}" for d in depts]
 
 
-def get_equipment_by_filters(college: str = None, dept_code: str = None, category: str = None, user_role: str = 'college', user_college_code: str = None) -> list:
+def get_equipment_by_filters(college: str = None, dept_code: str = None, category: str = None, item_name: str = None, user_role: str = 'college', user_college_code: str = None) -> list:
     """필터링된 기자재 목록"""
     conn = get_connection()
     cursor = conn.cursor()
@@ -294,6 +305,10 @@ def get_equipment_by_filters(college: str = None, dept_code: str = None, categor
         query += " AND e.category = ?"
         params.append(category)
 
+    if item_name and item_name.strip():
+        query += " AND e.item_name LIKE ?"
+        params.append(f"%{item_name}%")
+
     query += " ORDER BY e.item_code DESC"
 
     cursor.execute(query, params)
@@ -310,7 +325,7 @@ def show_add_repair_form(user: dict):
     st.markdown("#### 🔍 기자재 선택")
 
     # 필터링 섹션
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns([1.5, 1.5, 1, 1.5, 0.8])
 
     with col1:
         colleges = get_colleges(user['role'], user['college_code'])
@@ -331,6 +346,15 @@ def show_add_repair_form(user: dict):
         selected_category = st.selectbox("카테고리", categories, key="repair_add_category")
 
     with col4:
+        # 품명 검색
+        item_name_search = st.text_input(
+            "품명 검색",
+            placeholder="품명 입력",
+            key="repair_add_item_name",
+            help="품명의 일부만 입력해도 검색됩니다"
+        )
+
+    with col5:
         st.write("")  # 여백
         st.write("")  # 여백
         if st.button("🔍 검색", use_container_width=True):
@@ -342,6 +366,7 @@ def show_add_repair_form(user: dict):
             college=selected_college if selected_college != '전체' else None,
             dept_code=dept_code,
             category=selected_category if selected_category != '전체' else None,
+            item_name=item_name_search,
             user_role=user['role'],
             user_college_code=user['college_code']
         )

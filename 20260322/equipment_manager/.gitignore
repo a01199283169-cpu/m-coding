@@ -1,0 +1,44 @@
+# 데이터베이스
+data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# 업로드 파일
+uploads/
+photos/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# 로그 파일
+*.log
+streamlit.log
+
+# 환경 설정
+.env
+.env.local
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml

@@ -24,9 +24,9 @@ def export_to_excel(data: list, college_name: str = "전체") -> bytes:
 
     # 헤더 설정 (단과대학 다음에 학과)
     headers = [
-        "번호", "단과대학", "학과", "자산구분", "카테고리", "품목코드", "품목명", "규격",
+        "번호", "단과대학", "학과", "자산구분", "카테고리", "품목코드", "자산코드", "품목명", "규격",
         "수량", "단가", "총액", "입고일",
-        "납품업체", "보관위치", "내용연수", "폐기예정일",
+        "납품업체", "보관위치", "예산부서", "내용연수", "폐기예정일",
         "입력자", "입력일", "비고"
     ]
 
@@ -49,32 +49,34 @@ def export_to_excel(data: list, college_name: str = "전체") -> bytes:
         ws.cell(row=row_idx, column=4, value=item.get('asset_type', ''))  # 자산구분
         ws.cell(row=row_idx, column=5, value=item.get('category', ''))  # 카테고리
         ws.cell(row=row_idx, column=6, value=item.get('item_code', ''))  # 품목코드
-        ws.cell(row=row_idx, column=7, value=item.get('item_name', ''))  # 품목명
-        ws.cell(row=row_idx, column=8, value=item.get('spec', ''))  # 규격
-        ws.cell(row=row_idx, column=9, value=item.get('quantity', 0))  # 수량
+        ws.cell(row=row_idx, column=7, value=item.get('asset_code', ''))  # 자산코드
+        ws.cell(row=row_idx, column=8, value=item.get('item_name', ''))  # 품목명
+        ws.cell(row=row_idx, column=9, value=item.get('spec', ''))  # 규격
+        ws.cell(row=row_idx, column=10, value=item.get('quantity', 0))  # 수량
 
         # 단가 - 천단위 콤마
-        cell_unit_price = ws.cell(row=row_idx, column=10, value=item.get('unit_price', 0))
+        cell_unit_price = ws.cell(row=row_idx, column=11, value=item.get('unit_price', 0))
         cell_unit_price.number_format = '#,##0'
 
         # 총액 - 천단위 콤마
-        cell_total_price = ws.cell(row=row_idx, column=11, value=item.get('total_price', 0))
+        cell_total_price = ws.cell(row=row_idx, column=12, value=item.get('total_price', 0))
         cell_total_price.number_format = '#,##0'
 
-        ws.cell(row=row_idx, column=12, value=item.get('arrival_date', ''))  # 입고일
-        ws.cell(row=row_idx, column=13, value=item.get('vendor', ''))  # 납품업체
-        ws.cell(row=row_idx, column=14, value=item.get('location', ''))  # 보관위치
-        ws.cell(row=row_idx, column=15, value=item.get('useful_life', ''))  # 내용연수
-        ws.cell(row=row_idx, column=16, value=item.get('disposal_date', ''))  # 폐기예정일
-        ws.cell(row=row_idx, column=17, value=item.get('registrant_name', ''))  # 입력자
-        ws.cell(row=row_idx, column=18, value=item.get('created_at', ''))  # 입력일
-        ws.cell(row=row_idx, column=19, value=item.get('note', ''))  # 비고
+        ws.cell(row=row_idx, column=13, value=item.get('arrival_date', ''))  # 입고일
+        ws.cell(row=row_idx, column=14, value=item.get('vendor', ''))  # 납품업체
+        ws.cell(row=row_idx, column=15, value=item.get('location', ''))  # 보관위치
+        ws.cell(row=row_idx, column=16, value=item.get('budget_dept', ''))  # 예산부서
+        ws.cell(row=row_idx, column=17, value=item.get('useful_life', ''))  # 내용연수
+        ws.cell(row=row_idx, column=18, value=item.get('disposal_date', ''))  # 폐기예정일
+        ws.cell(row=row_idx, column=19, value=item.get('registrant_name', ''))  # 입력자
+        ws.cell(row=row_idx, column=20, value=item.get('created_at', ''))  # 입력일
+        ws.cell(row=row_idx, column=21, value=item.get('note', ''))  # 비고
 
     # 열 너비 자동 조정
     column_widths = {
-        'A': 6,  'B': 15, 'C': 25, 'D': 12, 'E': 20, 'F': 15,
-        'G': 20, 'H': 12, 'I': 8,  'J': 12, 'K': 12, 'L': 12,
-        'M': 15, 'N': 15, 'O': 10, 'P': 12, 'Q': 12, 'R': 12, 'S': 30
+        'A': 6,  'B': 15, 'C': 25, 'D': 12, 'E': 20, 'F': 15, 'G': 15,
+        'H': 20, 'I': 12, 'J': 8,  'K': 12, 'L': 12, 'M': 12,
+        'N': 15, 'O': 15, 'P': 12, 'Q': 10, 'R': 12, 'S': 12, 'T': 12, 'U': 30
     }
     for col, width in column_widths.items():
         ws.column_dimensions[col].width = width
@@ -117,24 +119,31 @@ def parse_excel_upload(file_content: bytes) -> tuple:
                 continue
 
             try:
-                # 엑셀 데이터 → 딕셔너리 변환
+                # 엑셀 데이터 → 딕셔너리 변환 (헤더 순서에 맞춤)
+                # 번호(0), 단과대학(1), 학과(2), 자산구분(3), 카테고리(4), 품목코드(5), 자산코드(6),
+                # 품목명(7), 규격(8), 수량(9), 단가(10), 총액(11), 입고일(12),
+                # 납품업체(13), 보관위치(14), 예산부서(15), 내용연수(16), 폐기예정일(17),
+                # 입력자(18), 입력일(19), 비고(20)
                 item_data = {
-                    'item_code': row[1],        # 품목코드
-                    'item_name': row[2],        # 품목명
-                    'spec': row[3],             # 규격
+                    'item_code': row[5],        # 품목코드
+                    'asset_code': row[6],       # 자산코드
+                    'item_name': row[7],        # 품목명
+                    'spec': row[8],             # 규격
                     'dept_code': None,          # 학과코드 (학과명으로부터 조회 필요)
-                    'dept_name': row[5],        # 학과명
-                    'asset_type': row[6] if row[6] else '교육용기자재',
-                    'quantity': int(row[7]) if row[7] else 1,
-                    'unit_price': int(row[8]) if row[8] else 0,
-                    'total_price': int(row[9]) if row[9] else 0,
-                    'arrival_date': row[10],    # 입고일
-                    'vendor': row[11],          # 납품업체
-                    'location': row[12],        # 보관위치
-                    'useful_life': int(row[13]) if row[13] else None,
-                    'disposal_date': row[14],   # 폐기예정일
-                    'registrant_name': row[15], # 입력자
-                    'note': row[17]             # 비고
+                    'dept_name': row[2],        # 학과명
+                    'asset_type': row[3] if row[3] else '교육용기자재',
+                    'category': row[4],         # 카테고리
+                    'quantity': int(row[9]) if row[9] else 1,
+                    'unit_price': int(row[10]) if row[10] else 0,
+                    'total_price': int(row[11]) if row[11] else 0,
+                    'arrival_date': row[12],    # 입고일
+                    'vendor': row[13],          # 납품업체
+                    'location': row[14],        # 보관위치
+                    'budget_dept': row[15],     # 예산부서
+                    'useful_life': int(row[16]) if row[16] else None,
+                    'disposal_date': row[17],   # 폐기예정일
+                    'registrant_name': row[18], # 입력자
+                    'note': row[20]             # 비고
                 }
 
                 # 필수 항목 검증

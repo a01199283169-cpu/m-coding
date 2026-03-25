@@ -39,6 +39,35 @@ def get_asset_types() -> list:
     return [at['name'] for at in asset_types]
 
 
+def get_all_colleges() -> list:
+    """모든 단과대학 목록 조회"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT DISTINCT college
+        FROM departments
+        ORDER BY college
+    """)
+    colleges = cursor.fetchall()
+    conn.close()
+    return [c['college'] for c in colleges]
+
+
+def get_depts_by_college(college_name: str) -> list:
+    """특정 단과대학의 학과 목록 반환"""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT dept_code, dept_name
+        FROM departments
+        WHERE college = ?
+        ORDER BY dept_code
+    """, (college_name,))
+    depts = cursor.fetchall()
+    conn.close()
+    return [(d['dept_code'], d['dept_name']) for d in depts]
+
+
 def get_user_depts(college_code: str) -> list:
     """사용자 소속 단과대학의 학과 목록 반환"""
     conn = get_connection()
@@ -117,7 +146,9 @@ def save_equipment(data: dict, user: dict, is_edit: bool = False, item_id: int =
             # 수정 모드
             cursor.execute("""
                 UPDATE equipment
-                SET item_name = ?,
+                SET asset_code = ?,
+                    budget_dept = ?,
+                    item_name = ?,
                     category = ?,
                     spec = ?,
                     dept_code = ?,
@@ -136,6 +167,8 @@ def save_equipment(data: dict, user: dict, is_edit: bool = False, item_id: int =
                     updated_at = ?
                 WHERE id = ?
             """, (
+                data.get('asset_code'),
+                data.get('budget_dept'),
                 data['item_name'],
                 data.get('category'),
                 data.get('spec'),
@@ -161,8 +194,11 @@ def save_equipment(data: dict, user: dict, is_edit: bool = False, item_id: int =
 
         else:
             # 신규 등록 모드
-            # 품목코드 자동생성
-            item_code = generate_item_code(data['dept_code'])
+            # 품목코드 검증
+            item_code = data.get('item_code', '').strip()
+
+            if not item_code:
+                return False, "품목코드를 입력해주세요. (시설팀 부여 코드)", None
 
             # 중복 체크
             if check_code_exists(item_code):
@@ -179,14 +215,16 @@ def save_equipment(data: dict, user: dict, is_edit: bool = False, item_id: int =
 
             cursor.execute("""
                 INSERT INTO equipment (
-                    item_code, item_name, category, spec, dept_code, college_code,
+                    item_code, asset_code, budget_dept, item_name, category, spec, dept_code, college_code,
                     quantity, unit_price, total_price,
                     purchase_date, arrival_date, vendor,
                     asset_type, location, useful_life, disposal_date,
                     note, registrant_name, registrant_id
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 item_code,
+                data.get('asset_code'),
+                data.get('budget_dept'),
                 data['item_name'],
                 data.get('category'),
                 data.get('spec'),
@@ -329,48 +367,153 @@ def show_register_form(user: dict):
     title = "✏️ 기자재 수정" if is_edit else "➕ 기자재 신규 등록"
     st.title(title)
 
-    # 학과 목록
-    depts = get_user_depts(user['college_code'])
-
-    # 학과가 없으면 경고 표시
-    if not depts:
-        st.error(f"⚠️ {user['college_name']}에 등록된 학과가 없습니다. 관리자에게 문의하세요.")
-        st.stop()
-
-    dept_options = [f"{code} - {name}" for code, name in depts]
-
-    # 기본값 설정
-    default_dept_idx = 0
-    if existing_data and existing_data['dept_code']:
-        for idx, (code, name) in enumerate(depts):
-            if code == existing_data['dept_code']:
-                default_dept_idx = idx
-                break
-
     # 섹션1: 기본정보
     st.subheader("📝 기본 정보")
 
-    col1, col2 = st.columns(2)
+    # 관리자인 경우 단과대학 선택 가능
+    is_admin = user['college_code'] == 'ALL'
 
-    with col1:
-        st.text_input("단과대학", value=user['college_name'], disabled=True)
+    if is_admin:
+        # 모든 단과대학 목록 조회
+        all_colleges = get_all_colleges()
+        college_options = ['전체'] + all_colleges
 
-    with col2:
-        selected_dept = st.selectbox(
-            "학과 *",
-            dept_options,
-            index=default_dept_idx,
-            key="dept_select"
-        )
-        # None 체크 추가
-        dept_code = selected_dept.split(' - ')[0] if selected_dept else ""
+        # 세션 상태 초기화
+        if 'selected_college_register' not in st.session_state:
+            # 수정 모드이고 기존 데이터가 있으면 해당 단과대학으로 초기화
+            if existing_data:
+                conn = get_connection()
+                cursor = conn.cursor()
+                cursor.execute("SELECT college FROM departments WHERE dept_code = ?",
+                             (existing_data['dept_code'],))
+                result = cursor.fetchone()
+                conn.close()
+                if result:
+                    st.session_state.selected_college_register = result['college']
+                else:
+                    st.session_state.selected_college_register = '전체'
+            else:
+                st.session_state.selected_college_register = '전체'
 
-    # 품목코드 표시
-    if is_edit and existing_data:
-        st.text_input("품목코드", value=existing_data['item_code'], disabled=True)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            # 단과대학 선택
+            default_college_idx = 0
+            if st.session_state.selected_college_register in college_options:
+                default_college_idx = college_options.index(st.session_state.selected_college_register)
+
+            selected_college = st.selectbox(
+                "단과대학 *",
+                college_options,
+                index=default_college_idx,
+                key="college_select"
+            )
+
+            # 단과대학 선택이 바뀌면 세션 상태 업데이트
+            if selected_college != st.session_state.selected_college_register:
+                st.session_state.selected_college_register = selected_college
+                st.rerun()
+
+        with col2:
+            # 선택된 단과대학에 따라 학과 목록 필터링
+            if selected_college == '전체':
+                depts = get_user_depts('ALL')
+            else:
+                depts = get_depts_by_college(selected_college)
+
+            if not depts:
+                st.warning(f"⚠️ {selected_college}에 등록된 학과가 없습니다.")
+                dept_options = []
+                dept_code = ""
+            else:
+                dept_options = [f"{code} - {name}" for code, name in depts]
+
+                # 기본값 설정
+                default_dept_idx = 0
+                if existing_data and existing_data['dept_code']:
+                    for idx, (code, name) in enumerate(depts):
+                        if code == existing_data['dept_code']:
+                            default_dept_idx = idx
+                            break
+
+                if dept_options:
+                    selected_dept = st.selectbox(
+                        "학과 *",
+                        dept_options,
+                        index=default_dept_idx,
+                        key="dept_select"
+                    )
+                    dept_code = selected_dept.split(' - ')[0] if selected_dept else ""
+                else:
+                    dept_code = ""
     else:
-        preview_code = generate_item_code(dept_code)
-        st.text_input("품목코드 (자동생성)", value=preview_code, disabled=True)
+        # 일반 사용자는 소속 단과대학의 학과만 표시
+        depts = get_user_depts(user['college_code'])
+
+        if not depts:
+            st.error(f"⚠️ {user['college_name']}에 등록된 학과가 없습니다. 관리자에게 문의하세요.")
+            st.stop()
+
+        dept_options = [f"{code} - {name}" for code, name in depts]
+
+        # 기본값 설정
+        default_dept_idx = 0
+        if existing_data and existing_data['dept_code']:
+            for idx, (code, name) in enumerate(depts):
+                if code == existing_data['dept_code']:
+                    default_dept_idx = idx
+                    break
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.text_input("단과대학", value=user['college_name'], disabled=True)
+
+        with col2:
+            selected_dept = st.selectbox(
+                "학과 *",
+                dept_options,
+                index=default_dept_idx,
+                key="dept_select"
+            )
+            dept_code = selected_dept.split(' - ')[0] if selected_dept else ""
+
+    # 품목코드 입력 (시설팀 부여 코드)
+    if is_edit and existing_data:
+        item_code_input = st.text_input(
+            "품목코드 (수정 불가)",
+            value=existing_data['item_code'],
+            disabled=True,
+            help="품목코드는 수정할 수 없습니다",
+            key="item_code_edit"
+        )
+    else:
+        item_code_input = st.text_input(
+            "품목코드 ⚠️ 시설팀 부여 코드 입력 (필수)",
+            value="",
+            placeholder="예: EDU-2024-001 또는 시설팀 부여 코드",
+            help="⚠️ 중요: 시설팀에서 부여받은 정확한 품목코드를 입력하세요",
+            key="item_code_new"
+        )
+
+    # 자산코드 입력
+    asset_code = st.text_input(
+        "자산코드 (선택)",
+        value=existing_data.get('asset_code', '') if existing_data else '',
+        placeholder="예: ASSET-2024-001",
+        help="학교 자산관리 코드 (있는 경우 입력)",
+        key="asset_code_input"
+    )
+
+    # 예산부서 입력
+    budget_dept = st.text_input(
+        "예산부서 (선택)",
+        value=existing_data.get('budget_dept', '') if existing_data else '',
+        placeholder="예: 교무처, 학생처, 총무처 등",
+        help="예산을 집행한 부서명",
+        key="budget_dept_input"
+    )
 
     # 자산구분 선택 (DB에서 조회)
     asset_type_options = get_asset_types()
@@ -591,7 +734,9 @@ def show_register_form(user: dict):
     with col2:
         if st.button("💾 저장", use_container_width=True, type="primary"):
             # 필수항목 검증
-            if not item_name:
+            if not item_code_input or not item_code_input.strip():
+                st.error("⚠️ 품목코드를 입력하세요. (시설팀 부여 코드 필수)")
+            elif not item_name:
                 st.error("품목명을 입력하세요.")
             elif not registrant_name:
                 st.error("입력자 이름을 입력하세요.")
@@ -602,6 +747,9 @@ def show_register_form(user: dict):
             else:
                 # 데이터 준비
                 data = {
+                    'item_code': item_code_input.strip(),
+                    'asset_code': asset_code.strip() if asset_code else None,
+                    'budget_dept': budget_dept.strip() if budget_dept else None,
                     'item_name': item_name,
                     'category': category if category else None,
                     'spec': spec if spec else None,
@@ -628,7 +776,7 @@ def show_register_form(user: dict):
 
                     # 사진 저장 (신규 또는 수정 모두 가능)
                     if valid_files and saved_item_id:
-                        item_code = existing_data['item_code'] if existing_data else generate_item_code(dept_code)
+                        item_code = existing_data['item_code'] if existing_data else item_code_input.strip()
                         photo_count = save_uploaded_photos(
                             valid_files,
                             saved_item_id,

@@ -289,6 +289,19 @@ def init_database():
         )
         print("✓ 초기 카테고리 7개 생성 완료")
 
+    # 마이그레이션: 자산코드 및 예산부서 컬럼 추가
+    try:
+        cursor.execute("SELECT asset_code FROM equipment LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE equipment ADD COLUMN asset_code TEXT")
+        print("✓ equipment 테이블에 asset_code 컬럼 추가 완료")
+
+    try:
+        cursor.execute("SELECT budget_dept FROM equipment LIMIT 1")
+    except sqlite3.OperationalError:
+        cursor.execute("ALTER TABLE equipment ADD COLUMN budget_dept TEXT")
+        print("✓ equipment 테이블에 budget_dept 컬럼 추가 완료")
+
     conn.commit()
     conn.close()
     print("✓ 데이터베이스 초기화 완료")
