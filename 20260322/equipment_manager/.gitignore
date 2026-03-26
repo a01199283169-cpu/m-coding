@@ -1,9 +1,13 @@
 # 데이터베이스
 data/
+!data/sessions/.gitkeep
 *.db
 *.db-journal
 *.sqlite
 *.sqlite3
+
+# 세션 파일
+data/sessions/*.json
 
 # 업로드 파일
 uploads/
