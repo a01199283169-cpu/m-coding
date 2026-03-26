@@ -1441,52 +1441,7 @@ def show_list_view(user: dict):
                 else:
                     st.warning("다운로드할 데이터가 없습니다.")
 
-        # 다중 삭제 확인 팝업 (상단) - 먼저 표시
-        if st.session_state.get('show_bulk_delete_confirm', False):
-            st.markdown("---")
-            selected_ids_to_delete = st.session_state.get('selected_items_to_delete', [])
-            st.warning(f"⚠️ 선택한 {len(selected_ids_to_delete)}개 품목을 삭제하시겠습니까?")
-
-            col1, col2, col3 = st.columns([1, 1, 4])
-            with col1:
-                if st.button("✅ 삭제 확인", type="primary", key="confirm_bulk_delete"):
-                    # 다중 소프트 삭제 실행
-                    conn = get_connection()
-                    cursor = conn.cursor()
-                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
-                    for item_id in selected_ids_to_delete:
-                        cursor.execute("""
-                            UPDATE equipment
-                            SET is_deleted = 1, updated_at = ?
-                            WHERE id = ?
-                        """, (now, item_id))
-
-                    conn.commit()
-                    conn.close()
-
-                    # 체크박스 상태 초기화
-                    for item_id in selected_ids_to_delete:
-                        checkbox_key = f"select_{item_id}"
-                        if checkbox_key in st.session_state:
-                            del st.session_state[checkbox_key]
-
-                    st.success(f"✅ {len(selected_ids_to_delete)}개 품목이 삭제되었습니다.")
-                    st.session_state.show_bulk_delete_confirm = False
-                    st.session_state.selected_items_to_delete = []
-                    st.rerun()
-
-            with col2:
-                if st.button("❌ 취소", key="cancel_bulk_delete"):
-                    st.session_state.show_bulk_delete_confirm = False
-                    st.rerun()
-
-        # 다중 삭제 버튼 (상단) - 확인 팝업이 없을 때만 표시
-        if not st.session_state.get('show_bulk_delete_confirm', False):
-            st.markdown("")
-            if st.button("🗑️ 다중 삭제", type="primary", key="bulk_delete_btn_top"):
-                st.session_state.bulk_delete_requested = True
-                st.rerun()
+        # 상단 다중 삭제 로직 제거 - 테이블 위로 이동
 
         # 단일 삭제 확인 팝업 (기존 유지)
         if st.session_state.get('show_delete_confirm', False):
@@ -1520,6 +1475,65 @@ def show_list_view(user: dict):
             st.info("조회된 데이터가 없습니다.")
         else:
             st.subheader(f"📊 목록 ({len(results)}건)")
+
+            # 다중 삭제 확인 팝업 (테이블 바로 위)
+            if st.session_state.get('show_bulk_delete_confirm', False):
+                st.markdown("---")
+                selected_ids_to_delete = st.session_state.get('selected_items_to_delete', [])
+                st.warning(f"⚠️ 선택한 {len(selected_ids_to_delete)}개 품목을 삭제하시겠습니까?")
+
+                col1, col2, col3 = st.columns([1, 1, 4])
+                with col1:
+                    if st.button("✅ 삭제 확인", type="primary", key="confirm_bulk_delete"):
+                        # 다중 소프트 삭제 실행
+                        conn = get_connection()
+                        cursor = conn.cursor()
+                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                        for item_id in selected_ids_to_delete:
+                            cursor.execute("""
+                                UPDATE equipment
+                                SET is_deleted = 1, updated_at = ?
+                                WHERE id = ?
+                            """, (now, item_id))
+
+                        conn.commit()
+                        conn.close()
+
+                        # 체크박스 상태 초기화
+                        for item_id in selected_ids_to_delete:
+                            checkbox_key = f"select_{item_id}"
+                            if checkbox_key in st.session_state:
+                                del st.session_state[checkbox_key]
+
+                        st.success(f"✅ {len(selected_ids_to_delete)}개 품목이 삭제되었습니다.")
+                        st.session_state.show_bulk_delete_confirm = False
+                        st.session_state.selected_items_to_delete = []
+                        st.rerun()
+
+                with col2:
+                    if st.button("❌ 취소", key="cancel_bulk_delete"):
+                        st.session_state.show_bulk_delete_confirm = False
+                        st.rerun()
+
+            # 다중 삭제 버튼 (테이블 바로 위)
+            if not st.session_state.get('show_bulk_delete_confirm', False):
+                st.markdown("")
+                if st.button("🗑️ 다중 삭제", type="primary", key="bulk_delete_btn"):
+                    # 체크박스 상태 즉시 확인 (현재 렌더링 사이클에서)
+                    selected_ids = []
+                    for row in results:
+                        checkbox_key = f"select_{row['id']}"
+                        # 이전 상태에서 선택된 항목 확인
+                        if st.session_state.get(checkbox_key, False):
+                            selected_ids.append(row['id'])
+
+                    if len(selected_ids) == 0:
+                        st.warning("⚠️ 먼저 삭제할 항목을 선택해주세요.")
+                    else:
+                        st.session_state.selected_items_to_delete = selected_ids
+                        st.session_state.show_bulk_delete_confirm = True
+                        st.rerun()
 
             # 테이블 헤더
             header_cols = st.columns([0.4, 0.6, 1, 1.2, 1.5, 1, 1.8, 1, 0.9, 0.7, 0.8, 0.9, 0.8, 0.6, 0.6, 0.7])
@@ -1612,24 +1626,6 @@ def show_list_view(user: dict):
 
                 if idx < len(results) - 1:
                     st.markdown("<hr style='margin: 5px 0; opacity: 0.3;'>", unsafe_allow_html=True)
-
-            # 다중 삭제 요청 처리 (테이블 렌더링 후)
-            if st.session_state.get('bulk_delete_requested', False):
-                # 체크박스 상태 수집
-                selected_ids = []
-                for row in results:
-                    checkbox_key = f"select_{row['id']}"
-                    if st.session_state.get(checkbox_key, False):
-                        selected_ids.append(row['id'])
-
-                if len(selected_ids) == 0:
-                    st.warning("⚠️ 삭제할 항목을 선택해주세요.")
-                    st.session_state.bulk_delete_requested = False
-                else:
-                    st.session_state.selected_items_to_delete = selected_ids
-                    st.session_state.show_bulk_delete_confirm = True
-                    st.session_state.bulk_delete_requested = False
-                    st.rerun()
 
             # 상세보기 다이얼로그 표시
             if 'show_detail_id' in st.session_state and st.session_state.show_detail_id:
