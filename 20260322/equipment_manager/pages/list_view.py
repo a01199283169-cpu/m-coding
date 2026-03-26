@@ -1440,44 +1440,8 @@ def show_list_view(user: dict):
                     )
                 else:
                     st.warning("다운로드할 데이터가 없습니다.")
-    
-        # 다중 삭제 확인 팝업
-        if st.session_state.get('show_bulk_delete_confirm', False):
-            selected_ids = st.session_state.get('selected_items_to_delete', [])
-            st.warning(f"⚠️ 선택한 {len(selected_ids)}개 품목을 삭제하시겠습니까?")
-            col1, col2, col3 = st.columns([1, 1, 4])
-            with col1:
-                if st.button("✅ 삭제 확인", type="primary", key="confirm_bulk_delete"):
-                    # 다중 소프트 삭제 실행
-                    conn = get_connection()
-                    cursor = conn.cursor()
-                    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-                    for item_id in selected_ids:
-                        cursor.execute("""
-                            UPDATE equipment
-                            SET is_deleted = 1, updated_at = ?
-                            WHERE id = ?
-                        """, (now, item_id))
-
-                    conn.commit()
-                    conn.close()
-
-                    # 체크박스 상태 초기화
-                    for item_id in selected_ids:
-                        checkbox_key = f"select_{item_id}"
-                        if checkbox_key in st.session_state:
-                            del st.session_state[checkbox_key]
-
-                    st.success(f"{len(selected_ids)}개 품목이 삭제되었습니다.")
-                    st.session_state.show_bulk_delete_confirm = False
-                    st.session_state.selected_items_to_delete = []
-                    st.rerun()
-
-            with col2:
-                if st.button("❌ 취소", key="cancel_bulk_delete"):
-                    st.session_state.show_bulk_delete_confirm = False
-                    st.rerun()
+        # 다중 삭제 확인 팝업은 아래로 이동 (테이블 아래)
 
         # 단일 삭제 확인 팝업 (기존 유지)
         if st.session_state.get('show_delete_confirm', False):
@@ -1623,6 +1587,46 @@ def show_list_view(user: dict):
                     st.session_state.selected_items_to_delete = selected_ids
                     st.session_state.show_bulk_delete_confirm = True
                     st.rerun()
+
+            # 다중 삭제 확인 팝업 (버튼 바로 아래에 표시)
+            if st.session_state.get('show_bulk_delete_confirm', False):
+                st.markdown("---")
+                selected_ids_to_delete = st.session_state.get('selected_items_to_delete', [])
+                st.warning(f"⚠️ 선택한 {len(selected_ids_to_delete)}개 품목을 삭제하시겠습니까?")
+
+                col1, col2, col3 = st.columns([1, 1, 4])
+                with col1:
+                    if st.button("✅ 삭제 확인", type="primary", key="confirm_bulk_delete"):
+                        # 다중 소프트 삭제 실행
+                        conn = get_connection()
+                        cursor = conn.cursor()
+                        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+                        for item_id in selected_ids_to_delete:
+                            cursor.execute("""
+                                UPDATE equipment
+                                SET is_deleted = 1, updated_at = ?
+                                WHERE id = ?
+                            """, (now, item_id))
+
+                        conn.commit()
+                        conn.close()
+
+                        # 체크박스 상태 초기화
+                        for item_id in selected_ids_to_delete:
+                            checkbox_key = f"select_{item_id}"
+                            if checkbox_key in st.session_state:
+                                del st.session_state[checkbox_key]
+
+                        st.success(f"✅ {len(selected_ids_to_delete)}개 품목이 삭제되었습니다.")
+                        st.session_state.show_bulk_delete_confirm = False
+                        st.session_state.selected_items_to_delete = []
+                        st.rerun()
+
+                with col2:
+                    if st.button("❌ 취소", key="cancel_bulk_delete"):
+                        st.session_state.show_bulk_delete_confirm = False
+                        st.rerun()
 
             # 상세보기 다이얼로그 표시
             if 'show_detail_id' in st.session_state and st.session_state.show_detail_id:
