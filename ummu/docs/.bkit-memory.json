@@ -1,0 +1,22 @@
+{
+  "sessionCount": 5,
+  "lastSession": {
+    "startedAt": "2026-03-24T02:04:48.246Z",
+    "platform": "claude",
+    "level": "Starter"
+  },
+  "pdca": {
+    "currentFeature": "업무중심체제_HTML_수정",
+    "phase": "completed",
+    "startedAt": "2026-03-24T00:00:00.000Z",
+    "completedAt": "2026-03-24T01:15:00.000Z",
+    "matchRate": 100,
+    "tasks": {
+      "plan": "completed",
+      "design": "completed",
+      "do": "completed",
+      "check": "completed",
+      "report": "completed"
+    }
+  }
+}

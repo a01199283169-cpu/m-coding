@@ -1,0 +1,42 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-03-24T01:15:19.712Z",
+  "activeFeatures": [
+    "업무중심체제_HTML_수정"
+  ],
+  "primaryFeature": "업무중심체제_HTML_수정",
+  "features": {
+    "업무중심체제_HTML_수정": {
+      "phase": "act",
+      "phaseNumber": 5,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-03-24T01:15:19.712Z",
+        "lastUpdated": "2026-03-24T01:15:19.712Z"
+      },
+      "previousPhase": "check",
+      "autoAdvanced": true
+    }
+  },
+  "pipeline": {
+    "currentPhase": 1,
+    "level": "Dynamic",
+    "phaseHistory": []
+  },
+  "session": {
+    "startedAt": "2026-03-19T08:13:38.259Z",
+    "onboardingCompleted": false,
+    "lastActivity": "2026-03-24T01:15:19.712Z"
+  },
+  "history": [
+    {
+      "timestamp": "2026-03-24T01:15:19.712Z",
+      "feature": "업무중심체제_HTML_수정",
+      "phase": "act",
+      "action": "updated"
+    }
+  ]
+}

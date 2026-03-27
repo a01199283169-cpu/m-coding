@@ -57,7 +57,9 @@
       "Bash(wsl -d Ubuntu-24.04 -e bash -c \"which pandoc && pandoc --version | head -1 || echo ''not installed''\")",
       "Bash(wsl -d Ubuntu-24.04 -e bash -c \"python3 /home/snowwon5/m-coding/scripts/md_to_docx.py /home/snowwon5/m-coding/docs/claude-code-cli-cheatsheet.md 2>&1\")",
       "Bash(wsl -d Ubuntu-24.04 -e bash -c \"pandoc --version | head -1\")",
-      "Bash(wsl -d Ubuntu-24.04 -e bash -c \"dpkg -l pandoc 2>/dev/null | tail -2; find /usr -name pandoc 2>/dev/null | head -3\")"
+      "Bash(wsl -d Ubuntu-24.04 -e bash -c \"dpkg -l pandoc 2>/dev/null | tail -2; find /usr -name pandoc 2>/dev/null | head -3\")",
+      "Skill(pdca)",
+      "Bash(npx:*)"
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-03-23T08:55:59.415Z",
+  "lastUpdated": "2026-03-27T00:41:07.532Z",
   "activeFeatures": [
     "equipment_manager"
   ],
@@ -15,9 +15,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-03-23T04:11:26.634Z",
-        "lastUpdated": "2026-03-23T08:55:59.415Z"
+        "lastUpdated": "2026-03-27T00:41:07.532Z"
       },
-      "lastFile": "/home/snowwon5/m-coding/20260322/equipment_manager/pages/list_view.py"
+      "lastFile": "/home/snowwon5/m-coding/20260322/equipment_manager/Setup-EquipmentManager.ps1"
     }
   },
   "pipeline": {
@@ -28,7 +28,7 @@
   "session": {
     "startedAt": "2026-03-23T04:07:58.091Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-03-23T08:55:59.415Z"
+    "lastActivity": "2026-03-27T00:41:07.532Z"
   },
   "history": [
     {
@@ -807,6 +807,810 @@
     },
     {
       "timestamp": "2026-03-23T08:55:59.415Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T06:24:32.593Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T06:25:05.445Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T06:54:26.945Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T06:54:38.560Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T06:54:58.004Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:01:27.466Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:01:44.413Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:06:03.444Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:06:25.654Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:10:16.629Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:11:03.229Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:11:17.363Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-24T07:16:03.254Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:11:54.872Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:14:04.336Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:14:24.885Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:21:38.679Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:22:24.542Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:28:33.098Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:41:55.723Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:42:05.517Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:42:23.587Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:42:31.621Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:45:28.122Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:58:32.212Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T05:58:38.323Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:01:05.973Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:01:21.732Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:06:58.678Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:07:14.460Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:09:20.483Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:10:02.150Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:16:25.507Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:16:48.266Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:17:05.967Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:24:28.399Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:24:39.304Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:24:50.253Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:28:51.724Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:34:55.715Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:35:06.907Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:43:01.551Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:43:34.098Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:48:34.222Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:48:48.116Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:56:50.317Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:57:05.485Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:57:43.539Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:57:54.598Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:58:01.662Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T06:58:40.706Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:11:12.525Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:11:18.638Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:11:29.563Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:12:39.976Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:13:23.911Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:14:03.905Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:20:13.640Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:20:31.352Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:21:01.860Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:29:39.787Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:30:04.686Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:31:05.114Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:38:18.861Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:45:41.221Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:45:49.267Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:46:33.378Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:46:43.773Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:47:06.878Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:53:06.356Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:53:27.764Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:53:49.932Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:54:09.980Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:54:29.522Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:54:49.979Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:56:00.843Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T07:56:34.647Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:10:03.892Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:10:28.657Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:10:43.000Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:11:20.494Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:33:43.651Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:34:02.298Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:34:26.751Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:34:44.372Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:35:33.923Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:35:56.113Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:36:03.523Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:36:24.117Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-25T08:36:44.290Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T04:35:16.038Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T04:35:41.632Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T04:54:00.837Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:23:08.024Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:23:28.398Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:40:41.032Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:44:51.273Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:48:05.228Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:51:47.372Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:52:05.771Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:52:15.093Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:52:36.214Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:52:46.553Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:53:00.826Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:53:09.426Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:55:51.110Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:55:52.537Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T07:55:54.019Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:05:11.585Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:08:17.419Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:08:41.089Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:15:22.777Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:15:37.701Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:15:56.967Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:19:17.493Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:19:41.864Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:31:14.262Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:32:04.821Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:32:15.181Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:32:33.400Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:52:33.249Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:56:54.414Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:57:10.666Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T08:57:19.281Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T23:53:57.306Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T23:54:18.394Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-26T23:54:27.962Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:00:39.100Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:00:46.239Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:07:14.336Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:07:20.916Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:07:31.257Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:40:04.667Z",
+      "feature": "equipment_manager",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-03-27T00:41:07.532Z",
       "feature": "equipment_manager",
       "phase": "do",
       "action": "updated"
